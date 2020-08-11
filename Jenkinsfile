@@ -4,10 +4,6 @@ pipeline {
       label 'node12' 
     }
   }
-  options {
-    // set a timeout of 20 minutes for this pipeline
-    // timeout(time: 20, unit: 'MINUTES')
-  }
   stages {
     stage('Prepare') {
       steps {
@@ -18,33 +14,31 @@ pipeline {
     }
     stage('Build Processes') {
       parallel {
-        stage('Test'){
+        stage('Test') {
           steps {
             sh 'nx affected:test --parallel --maxParallel=5'
           }
         }
-        stage('Lint'){
+        stage('Lint') {
           steps {
             sh 'nx affected:lint --parallel --maxParallel=5'
           }
         }
-        stage('Build Application'){
+        stage('Build Application') {
            steps {
             sh 'npx build nginx-demo --prod'
           }
         }
-      }
-    }
-    stage('Deploy') {
-      stage('Deploy Application') {
-        steps {
-          //copy the nginx config to binary build location
-          sh 'cp nginx.conf ./dist/nginx.conf'   
-          dir('dist') {
-            sh 'oc start-build ui-components --from-dir . --follow'
+        stage('Deploy Application') {
+          steps {
+            //copy the nginx config to binary build location
+            sh 'cp nginx.conf ./dist/nginx.conf'   
+            dir('dist') {
+              sh 'oc start-build ui-components --from-dir . --follow'
+            }
           }
         }
-      }  
+      }
     }
   }
 }
