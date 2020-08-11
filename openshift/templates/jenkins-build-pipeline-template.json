@@ -25,7 +25,10 @@
           }
         },
         "strategy": {
-          "type": "JenkinsPipeline"
+          "type": "JenkinsPipeline",
+          "jenkinsPipelineStrategy": {
+            "jenkinsFilePath": "Jenkinsfile"
+          }
         },
         "triggers": [
           {
