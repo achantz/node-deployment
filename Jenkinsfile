@@ -20,17 +20,17 @@ pipeline {
       parallel {
         stage('Test'){
           steps {
-            sh "nx affected:test --parallel --maxParallel=5"
+            sh 'nx affected:test --parallel --maxParallel=5'
           }
         }
         stage('Lint'){
           steps {
-            sh "nx affected:lint --parallel --maxParallel=5"
+            sh 'nx affected:lint --parallel --maxParallel=5'
           }
         }
         stage('Build Application'){
            steps {
-            sh 'npx build nginx-demo --prod
+            sh 'npx build nginx-demo --prod'
           }
         }
       }
@@ -39,9 +39,9 @@ pipeline {
       stage('Deploy Application') {
         steps {
           //copy the nginx config to binary build location
-          sh "cp nginx.conf ./dist/nginx.conf"   
+          sh 'cp nginx.conf ./dist/nginx.conf'   
           dir('dist') {
-            sh "oc start-build ui-components --from-dir . --follow"
+            sh 'oc start-build ui-components --from-dir . --follow'
           }
         }
       }  
