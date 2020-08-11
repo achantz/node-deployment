@@ -1,14 +1,3 @@
-def publishNpm = false
-def deployStorybook = false;
-def base = '';
-def baseCommand = ''
-def generateNpmrc(){
-	sh "echo \"@abgov:registry=https://registry.npmjs.org/\" >> ~/.npmrc"
-	
-	sh "echo \"//registry.npmjs.org/:_authToken=21d6856c-6376-4f64-a27e-6533bd4bc8c7\" > ~/.npmrc"
-}
-
-
 pipeline {
   agent {
     node {
@@ -41,43 +30,21 @@ pipeline {
         }
         stage('Build Application'){
            steps {
-            sh 'npx ng build nginx-demo
+            sh 'npx build nginx-demo --prod
           }
         }
       }
     }
-    stage('Deploy Test') {
-      stage('Storybook'){
-          steps {
-            //copy the nginx config to binary buld location
-            sh "cp nginx.conf dist"   
-            dir('dist') {
-              sh "oc start-build ui-components --from-dir . --follow"
-            }
+    stage('Deploy') {
+      stage('Deploy Application') {
+        steps {
+          //copy the nginx config to binary build location
+          sh "cp nginx.conf ./dist/nginx.conf"   
+          dir('dist') {
+            sh "oc start-build ui-components --from-dir . --follow"
           }
-        }  
+        }
+      }  
     }
-
-    // stage('Deploy Prod') {
-    //   parallel {
-    //     stage('Storybook'){
-    //       when {
-    //         expression { deployStorybook == true }
-    //       }
-    //       steps {
-    //         echo 'placeholder'
-    //       }
-    //     }
-    //     stage('Publish to npm'){
-    //       when {
-    //         expression { publishNpm == true }
-    //       }
-    //       steps {
-    //         generateNpmrc()
-    //         sh 'npm run publish:npm'
-    //       }
-    //     }
-    //   }
-    //}
   }
 }
