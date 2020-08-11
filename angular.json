@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "projects": {
+    "nginx-demo": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/nginx-demo",
+      "sourceRoot": "apps/nginx-demo/src",
+      "prefix": "node-deployment",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/nginx-demo",
+            "index": "apps/nginx-demo/src/index.html",
+            "main": "apps/nginx-demo/src/main.ts",
+            "polyfills": "apps/nginx-demo/src/polyfills.ts",
+            "tsConfig": "apps/nginx-demo/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/nginx-demo/src/favicon.ico",
+              "apps/nginx-demo/src/assets"
+            ],
+            "styles": ["apps/nginx-demo/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/nginx-demo/src/environments/environment.ts",
+                  "with": "apps/nginx-demo/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "nginx-demo:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "nginx-demo:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "nginx-demo:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/nginx-demo/tsconfig.app.json",
+              "apps/nginx-demo/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/nginx-demo/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/nginx-demo/jest.config.js",
+            "tsConfig": "apps/nginx-demo/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/nginx-demo/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "nginx-demo-e2e": {
+      "root": "apps/nginx-demo-e2e",
+      "sourceRoot": "apps/nginx-demo-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/nginx-demo-e2e/cypress.json",
+            "tsConfig": "apps/nginx-demo-e2e/tsconfig.e2e.json",
+            "devServerTarget": "nginx-demo:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "nginx-demo:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/nginx-demo-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/nginx-demo-e2e/**/*"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "schematics": {
+    "@nrwl/workspace": {
+      "library": {
+        "linter": "tslint"
+      }
+    },
+    "@nrwl/cypress": {
+      "cypress-project": {
+        "linter": "tslint"
+      }
+    },
+    "@nrwl/node": {
+      "application": {
+        "linter": "tslint"
+      },
+      "library": {
+        "linter": "tslint"
+      }
+    },
+    "@nrwl/nest": {
+      "application": {
+        "linter": "tslint"
+      },
+      "library": {
+        "linter": "tslint"
+      }
+    },
+    "@nrwl/express": {
+      "application": {
+        "linter": "tslint"
+      },
+      "library": {
+        "linter": "tslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
+  },
+  "defaultProject": "nginx-demo"
+}
