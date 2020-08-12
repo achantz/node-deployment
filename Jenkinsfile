@@ -13,29 +13,27 @@ pipeline {
       }
     }
     stage('Build Processes') {
-      parallel {
-        stage('Test') {
-          steps {
-            sh 'nx test nginx-demo'
-          }
+      stage('Test') {
+        steps {
+          sh 'nx test nginx-demo'
         }
-        stage('Lint') {
-          steps {
-            sh 'nx lint nginx-demo'
-          }
+      }
+      stage('Lint') {
+        steps {
+          sh 'nx lint nginx-demo'
         }
-        stage('Build Application') {
-           steps {
-            sh 'nx build nginx-demo'
-          }
-        }
-        stage('Deploy Application') {
+      }
+      stage('Build Application') {
           steps {
-            //copy the nginx config to binary build location
-            sh 'cp nginx.conf dist/apps/nginx-demo/nginx.conf'
-            dir('dist/apps/nginx-demo') {
-              sh 'oc start-build nginx --from-dir . --follow'
-            }
+          sh 'nx build nginx-demo'
+        }
+      }
+      stage('Deploy Application') {
+        steps {
+          //copy the nginx config to binary build location
+          sh 'cp nginx.conf dist/apps/nginx-demo/nginx.conf'
+          dir('dist/apps/nginx-demo') {
+            sh 'oc start-build nginx --from-dir . --follow'
           }
         }
       }
