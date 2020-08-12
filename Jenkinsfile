@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Build Application') {
            steps {
-            sh 'npx build nginx-demo --prod'
+            sh 'nx affected --target=build'
           }
         }
         stage('Deploy Application') {
