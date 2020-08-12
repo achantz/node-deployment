@@ -16,23 +16,23 @@ pipeline {
       parallel {
         stage('Test') {
           steps {
-            sh 'nx affected --target=test --all --parallel'
+            sh 'nx test nginx-demo'
           }
         }
         stage('Lint') {
           steps {
-            sh 'nx affected --target=lint --all --parallel'
+            sh 'nx lint nginx-demo'
           }
         }
         stage('Build Application') {
            steps {
-            sh 'nx affected --target=build'
+            sh 'nx build nginx-demo'
           }
         }
         stage('Deploy Application') {
           steps {
             //copy the nginx config to binary build location
-            sh 'cp nginx.conf dist/apps/nginx-demo/nginx.conf'   
+            sh 'cp nginx.conf dist/apps/nginx-demo/nginx.conf'
             dir('dist/apps/nginx-demo') {
               sh 'oc start-build nginx --from-dir . --follow'
             }
