@@ -24,10 +24,6 @@
   "projects": {
     "nginx-demo": {
       "tags": []
-    },
-    "nginx-demo-e2e": {
-      "tags": [],
-      "implicitDependencies": ["nginx-demo"]
     }
   }
 }
