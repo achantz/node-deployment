@@ -32,7 +32,7 @@ pipeline {
         stage('Deploy Application') {
           steps {
             //copy the nginx config to binary build location
-            sh 'cp nginx.conf ./dist/nginx.conf'   
+            sh 'cp nginx.conf dist/nginx.conf'   
             dir('dist') {
               sh 'oc start-build ui-components --from-dir . --follow'
             }
