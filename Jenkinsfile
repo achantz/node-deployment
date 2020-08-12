@@ -32,8 +32,8 @@ pipeline {
         stage('Deploy Application') {
           steps {
             //copy the nginx config to binary build location
-            sh 'cp nginx.conf dist/nginx.conf'   
-            dir('dist') {
+            sh 'cp nginx.conf dist/apps/nginx-demo/nginx.conf'   
+            dir('dist/apps/nginx-demo') {
               sh 'oc start-build nginx --from-dir . --follow'
             }
           }
